@@ -1,6 +1,6 @@
 # Auto-Update Extension v0.1 Test Guide
 
-## When integrated, test these commands:
+## When integrated, test these commands
 
 ```bash
 # 1. View status
@@ -22,7 +22,7 @@ openclaw update --notify on
 openclaw update status
 ```
 
-## Expected Output Example:
+## Expected Output Example
 
 ```
 OpenClaw Auto-Update Status
@@ -34,12 +34,12 @@ OpenClaw Auto-Update Status
 ──────────────────────────────────────
 ```
 
-## Files Created:
+## Files Created
 
 - `src/cli/update-cli/auto-update.ts` - Main extension
 - Config stored at: `~/.openclaw/auto-update.json`
 
-## To Test Locally:
+## To Test Locally
 
 1. Once PR merges, update OpenClaw
 2. Run the commands above
