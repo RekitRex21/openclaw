@@ -14,7 +14,7 @@
 
 import { existsSync, mkdirSync } from "fs";
 import fs from "node:fs/promises";
-import { join, dirname } from "path";
+import { join, dirname } from "node:path";
 import { Option, type Command } from "commander";
 import { resolveStateDir } from "../../config/paths.js";
 import { theme } from "../../terminal/theme.js";
