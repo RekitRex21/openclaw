@@ -101,7 +101,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/up
 
         const config = await loadAutoUpdateConfig();
 
-        if (config.enabled && config.interval !== "manual") {
+        if (config.enabled && config.interval !== "manual" && process.env.OPENCLAW_AUTO_UPDATE) {
           const nextCheck = await getNextCheckTime();
           if (nextCheck && new Date() < nextCheck) {
             logInfo(
@@ -113,17 +113,26 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/up
           }
         }
 
-        await updateCommand({
-          json: Boolean(opts.json),
-          restart: Boolean(opts.restart),
-          channel: opts.channel as string | undefined,
-          tag: opts.tag as string | undefined,
-          timeout: opts.timeout as string | undefined,
-          yes: Boolean(opts.yes),
-        });
+        let updateSucceeded = false;
+        try {
+          await updateCommand({
+            json: Boolean(opts.json),
+            restart: Boolean(opts.restart),
+            channel: opts.channel as string | undefined,
+            tag: opts.tag as string | undefined,
+            timeout: opts.timeout as string | undefined,
+            yes: Boolean(opts.yes),
+          });
+          updateSucceeded = true;
+        } catch (err) {
+          defaultRuntime.error(String(err));
+          defaultRuntime.exit(1);
+        }
 
-        await recordUpdateCheck();
-        await displayAutoUpdateStatus();
+        if (updateSucceeded) {
+          await recordUpdateCheck();
+          await displayAutoUpdateStatus();
+        }
       } catch (err) {
         defaultRuntime.error(String(err));
         defaultRuntime.exit(1);

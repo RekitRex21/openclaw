@@ -35,10 +35,14 @@ export async function loadAutoUpdateConfig(): Promise<AutoUpdateConfig> {
   try {
     await fs.access(configPath);
     const content = await fs.readFile(configPath, "utf-8");
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    if (parsed && typeof parsed === "object") {
+      return parsed as AutoUpdateConfig;
+    }
+    throw new Error("Invalid config format");
   } catch (err) {
-    const error = err as Error & { code?: string };
-    if (error && error.code !== "ENOENT") {
+    const error = err as Error & { code?: string; name?: string };
+    if (error && error.code !== "ENOENT" && error.name !== "SyntaxError") {
       logWarn(
         `Failed to load auto-update config: ${error.message}. Using defaults.`,
         defaultRuntime,
